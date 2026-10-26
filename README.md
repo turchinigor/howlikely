@@ -21,19 +21,16 @@ howlikely/
 └── pyproject.toml             Python project, dependencies, tool config
 ```
 
-## Development setup (Windows)
+## Development setup (GitHub Codespaces)
 
-Virtual environment lives outside the repo at `C:\venvs\howlikely` (Python 3.12).
-
-```powershell
-C:\venvs\howlikely\Scripts\Activate.ps1
-pip install -e ".[dev]"
-pre-commit install
-```
+Development happens in GitHub Codespaces. On the repo page: **Code -> Codespaces -> Create
+codespace on main**. The dev container (`.devcontainer/devcontainer.json`) provides Python 3.12
+and Node 22, installs the project with `pip install -e ".[dev]"`, and installs the pre-commit hooks.
+No local setup is needed.
 
 Common commands:
 
-```powershell
+```bash
 pytest                                  # run tests
 ruff check . ; ruff format .            # lint + format
 mypy                                    # type-check
