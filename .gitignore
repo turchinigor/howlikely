@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Data: never commit raw or restricted source datasets
+data/raw/*
+data/interim/*
+data/processed/*
+!data/**/.gitkeep
+*.duckdb
+*.duckdb.wal
+
+# Frontend
+node_modules/
+frontend/dist/
+.vercel/
+
+# Editors / OS
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
