@@ -25,17 +25,22 @@ howlikely/
 
 Development happens in GitHub Codespaces. On the repo page: **Code -> Codespaces -> Create
 codespace on main**. The dev container (`.devcontainer/devcontainer.json`) provides Python 3.12
-and Node 22, installs the project with `pip install -e ".[dev]"`, and installs the pre-commit hooks.
+and Node 22, installs [uv](https://docs.astral.sh/uv/), runs `uv sync` to create `.venv` with the
+project and its `dev` dependency group (pinned by `uv.lock`), and installs the pre-commit hooks.
 No local setup is needed.
+
+Raw data in `data/raw/` is git-ignored, so it is not in a fresh codespace. Upload it by dragging
+the files into the VS Code Explorer (see `data/README.md`).
 
 Common commands:
 
 ```bash
-pytest                                  # run tests
-ruff check . ; ruff format .            # lint + format
-mypy                                    # type-check
-uvicorn howlikely.main:app --reload     # API at http://localhost:8000/docs
-howlikely-etl all                       # run ETL stages
+uv run pytest                                  # run tests
+uv run ruff check . ; uv run ruff format .     # lint + format
+uv run mypy                                    # type-check
+uv run uvicorn howlikely.main:app --reload     # API at http://localhost:8000/docs
+uv run howlikely-etl all                       # run ETL stages
+uv add <package>                               # add a dependency (use --dev for tooling)
 ```
 
 Copy `.env.example` to `.env` to override settings.
