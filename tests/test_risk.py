@@ -1,6 +1,6 @@
 import pytest
 
-from howlikely.core.risk import AnnualRisk, absolute_difference_per_100k, rate_ratio
+from howlikely.risk import AnnualRisk, absolute_difference_per_100k, rate_ratio
 
 
 def test_rates() -> None:
