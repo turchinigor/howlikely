@@ -1,50 +1,34 @@
-# HowLikely
+# HowLikely: road safety
 
-**How likely are you to die of...?** A free, mobile-friendly site for exploring annual mortality
-risk by country, age, sex, and cause of death, with external causes (road accidents, falls,
-drowning, violence, self-harm) given equal weight to health causes.
+Who dies on the world's roads, and why? An exploration of road traffic deaths by country,
+sex, and type of road user, using IHME Global Burden of Disease 2023 and WHO road safety data.
 
-> Results describe population-level annual mortality rates. They are not individual medical predictions.
+The findings go into a blog post with charts, and later into an interactive dashboard.
 
-See [PROJECT_SCOPE.md](PROJECT_SCOPE.md) for the full MVP scope.
+> All numbers are population-level annual rates. They are not personal predictions.
 
-## Repository layout
+## Layout
 
 ```text
-howlikely/
-├── backend/src/howlikely/     FastAPI app + shared domain logic (risk calculations)
-├── pipelines/src/howlikely_etl/  ETL: raw sources -> validated Parquet / DuckDB
-├── frontend/                  React + TypeScript + Tailwind UI (not scaffolded yet)
-├── data/                      Local data (raw/processed are git-ignored); see data/README.md
-├── tests/                     pytest suites (backend/, pipelines/)
-├── docs/                      Methodology, architecture, decision records
-└── pyproject.toml             Python project, dependencies, tool config
+data/
+  SOURCES.md     where every data file comes from
+  raw/           downloaded files, untouched (not in git)
+  processed/     cleaned tables (not in git)
+notebooks/       analysis
+src/howlikely/   reusable code (loading, cleaning, risk calculations)
+tests/           tests for src/
 ```
 
-## Development setup (GitHub Codespaces)
+## Setup
 
-Development happens in GitHub Codespaces. On the repo page: **Code -> Codespaces -> Create
-codespace on main**. The dev container (`.devcontainer/devcontainer.json`) provides Python 3.12
-and Node 22, installs [uv](https://docs.astral.sh/uv/), runs `uv sync` to create `.venv` with the
-project and its `dev` dependency group (pinned by `uv.lock`), and installs the pre-commit hooks.
-No local setup is needed.
-
-Raw data in `data/raw/` is git-ignored, so it is not in a fresh codespace. Upload it by dragging
-the files into the VS Code Explorer (see `data/README.md`).
-
-Common commands:
+Open the repo in GitHub Codespaces. The dev container installs uv and runs `uv sync`.
+Then download the data listed in [data/SOURCES.md](data/SOURCES.md) into `data/raw/`.
 
 ```bash
-uv run pytest                                  # run tests
-uv run ruff check . ; uv run ruff format .     # lint + format
-uv run mypy                                    # type-check
-uv run uvicorn howlikely.main:app --reload     # API at http://localhost:8000/docs
-uv run howlikely-etl all                       # run ETL stages
-uv add <package>                               # add a dependency (use --dev for tooling)
+uv run pytest              # run tests
+uv run ruff format .       # format code
+uv run ruff check .        # lint
+uv add <package>           # add a dependency (--dev for tools)
 ```
 
-Copy `.env.example` to `.env` to override settings.
-
-## Status
-
-Phase 1: data feasibility spike (see PROJECT_SCOPE.md section 13).
+In notebooks, pick the `.venv` kernel.

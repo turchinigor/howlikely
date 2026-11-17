@@ -1,4 +1,4 @@
-"""Annual mortality risk calculations (see docs/methodology.md).
+"""Annual mortality risk calculations.
 
 All functions describe population-level annual rates for one
 country x year x age group x sex x cause cell. They are not individual predictions.

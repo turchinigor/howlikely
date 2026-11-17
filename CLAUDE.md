@@ -1,40 +1,32 @@
 # CLAUDE.md
 
-HowLikely: public site showing annual mortality risk by country, age, sex, and cause.
-Scope: [PROJECT_SCOPE.md](PROJECT_SCOPE.md). Methodology: [docs/methodology.md](docs/methodology.md).
+Road safety analysis project. Findings go into a blog post (charts from the notebooks) and later
+a Streamlit dashboard (`app.py`, not built yet).
 
-## Current phase
+The user is learning data analysis. Keep code simple and beginner-readable: no extra layers,
+no defensive code for cases that can't happen, short comments only where needed.
 
-Phase 1, data feasibility spike (PROJECT_SCOPE.md section 13). Get a small, legally usable sample
-for Moldova, Romania, and Germany before building the UI. `frontend/` is not scaffolded on purpose.
+## Layout
+
+- `data/raw/<source>/`: untouched downloads, git-ignored. Provenance in `data/SOURCES.md`.
+- `data/processed/`: cleaned tables, git-ignored.
+- `notebooks/`: analysis. Run from `notebooks/`, so paths start with `../data/`.
+- `src/howlikely/`: code reused across notebooks. `risk.py` has rate / 1-in-N helpers.
+- `tests/`: pytest for `src/`.
 
 ## Commands
 
 ```bash
-pytest                                  # tests (tests/backend, tests/pipelines)
-ruff check . && ruff format --check .   # lint + format
-mypy                                    # strict type-check
-uvicorn howlikely.main:app --reload     # API, http://localhost:8000/docs
-howlikely-etl all                       # ETL stages (stubs)
-pre-commit run --all-files
+uv run pytest
+uv run ruff check . && uv run ruff format --check .
 ```
 
-CI (`.github/workflows/ci.yml`) runs ruff, mypy, and pytest. Keep all of them green.
+CI runs those three. Clear notebook outputs before committing (they contain source data).
 
-## Layout
+## Data rules
 
-- `backend/src/howlikely/`: FastAPI app (`main.py`, routes under `api/routes/`, mounted at `/api/v1`)
-  and `core/`, which holds domain logic shared with the ETL.
-- `pipelines/src/howlikely_etl/`: ETL, raw sources -> Parquet + DuckDB in `data/processed/`.
-- Settings come from `HOWLIKELY_*` env vars or `.env` (see `.env.example`).
-
-## Rules
-
-- Never invent country values. Show missing or non-comparable data as unavailable.
-- Rates are population-level annual estimates. Never present them as individual predictions.
-- Compare only identical age group, sex, cause, year, and method. Never mix crude and
-  age-standardized rates. Don't double-count a parent cause together with its children.
-- Never commit raw or restricted datasets (`data/raw|interim|processed` are git-ignored).
-  Record every source's provenance and license in `data/README.md` before using it.
-- Record significant technology or data-source decisions as ADRs in `docs/adr/`.
-- Python: 3.12, strict mypy, ruff at line length 100, full type hints.
+- Never invent values. Show missing data as missing.
+- Compare countries with age-standardized rates, never crude "All ages" rates.
+- Don't add or average rates across groups. Combine counts, or use the source's "Both" sex.
+- Don't double-count a parent cause with its children (Road injuries contains Pedestrian, etc.).
+- Never commit data files. Record every new source in `data/SOURCES.md`.
